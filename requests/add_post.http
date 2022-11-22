@@ -1,0 +1,9 @@
+POST  http://localhost:3000/api/blogs
+Content-Type: application/json
+
+{
+  "title": "express js router",
+  "author": "strongloop",
+  "url": "http://expressjs.com/en/api.html#router",
+  "likes": 100
+}
