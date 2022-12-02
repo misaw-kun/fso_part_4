@@ -1,3 +1,5 @@
+const User = require('../models/User')
+
 const starterBlogs = [
   {
     title: '7 Best Courses to learn Data Structure and Algorithms',
@@ -13,6 +15,12 @@ const starterBlogs = [
   }
 ]
 
+const usersInDb = async () => {
+  const users = await User.find({})
+  return users.map(u => u.toJSON())
+}
+
 module.exports = {
-  starterBlogs
+  starterBlogs,
+  usersInDb
 }
