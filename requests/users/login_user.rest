@@ -1,0 +1,29 @@
+### valid user
+
+POST  http://localhost:3000/api/login
+Content-Type: application/json
+
+{
+  "username": "redpanda",
+  "password": "s3cr3t"
+}
+
+###
+
+POST  http://localhost:3000/api/login
+Content-Type: application/json
+
+{
+  "username": "elgato",
+  "password": "c0d3w0rd"
+}
+
+### invalid pass
+
+POST  http://localhost:3000/api/login
+Content-Type: application/json
+
+{
+  "username": "redpanda",
+  "password": "p@55w0rd"
+}

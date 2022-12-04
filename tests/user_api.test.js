@@ -64,7 +64,6 @@ describe('when there is initially one user in db', () => {
   })
 
   test('creation fails if username or passwd isn\'t atleast 3 chars long', async () => {
-    const usersAtStart = await usersInDb()
 
     const newUser1 = {
       username: 'ab',

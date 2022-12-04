@@ -1,10 +1,10 @@
 POST  http://localhost:3000/api/blogs
 Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InJlZHBhbmRhIiwiaWQiOiI2MzhiYmRhYjJiYWIwYzM4ZTFkZDA3NjciLCJpYXQiOjE2NzAxMDI0NTJ9.0KBKExHwYRUvl74slhqNZzH8uEDLOslTHTmyotRyPN4
 
 {
-  "title": "express js router",
-  "author": "strongloop",
-  "url": "http://expressjs.com/en/api.html#router",
-  "likes": 100,
-  "user": "6389f7954a67a4c6ad56af4a"
+  "title": "learn modern PHP",
+  "author": "odan",
+  "url": "https://odan.github.io/learn-php/",
+  "likes": 826
 }
