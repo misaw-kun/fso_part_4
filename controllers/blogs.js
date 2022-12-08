@@ -3,7 +3,9 @@ const Blog = require('../models/Blog')
 const middleware = require('../utils/middleware')
 
 blogRouter.get('/', async (request, response) => {
-  const blogs = await Blog.find({}).populate('user', { username: 1, name: 1 })
+  const blogs = await Blog.find({})
+    .populate('user', { username: 1, name: 1 })
+  // .populate('likes', { username: 1 })
   return response.json(blogs)
 })
 
@@ -15,7 +17,7 @@ blogRouter.post('/', middleware.userExtractor, async (request, response, next) =
       title: body.title,
       author: body.author,
       url: body.url,
-      likes: body.likes || 0,
+      likes: body.likes || [],
       user: user._id
     })
 
@@ -44,7 +46,7 @@ blogRouter.delete('/:id', middleware.userExtractor, async (request, response, ne
     }
 
     if (blogtoBeDeleted.user.toString() === user.id) {
-      await Blog.findByIdAndRemove(id)
+      await blogtoBeDeleted.remove()
       response.status(204).end()
     } else {
       response.status(401).send({
@@ -57,22 +59,45 @@ blogRouter.delete('/:id', middleware.userExtractor, async (request, response, ne
 
 })
 
-blogRouter.put('/:id', async (request, response) => {
-  const body = request.body
+blogRouter.put('/:id/likes', middleware.userExtractor, async (request, response, next) => {
 
-  const updatedBlog = {
-    likes: body.likes
+  try {
+    const { id } = request.params
+    const { body, user } = request
+    const blogToBeUpdated = await Blog.findById(id)
+
+    if (!blogToBeUpdated) {
+      const error = new Error('blog with supplied id does not exist')
+      error.name = 'NotFoundError'
+      throw error
+    }
+
+    if (!user) {
+      return response.status(401).send({
+        error: 'login to like this blog'
+      })
+    }
+
+    let result = {}
+    if (blogToBeUpdated?.likes?.includes(user.id)) {
+      result = await blogToBeUpdated.updateOne({
+        $pull: {
+          likes: body.likes
+        }
+      }, { new: true })
+    } else {
+      result = await blogToBeUpdated.updateOne({
+        $push: {
+          likes: body.likes
+        }
+      }, { new: true })
+    }
+
+    response.status(200).send(result)
+
+  } catch (e) {
+    next(e)
   }
-
-  const result = await Blog.findByIdAndUpdate(request.params.id, updatedBlog, { new: true })
-
-  if (!result) {
-    const error = new Error('blog with supplied id does not exist')
-    error.name = 'NotFoundError'
-    throw error
-  }
-
-  response.status(204).send(result)
 })
 
 module.exports = blogRouter
